@@ -3,6 +3,12 @@ Coastal analyses on Digital Earth Africa data.
 """
 
 # Import required packages
+
+# Force GeoPandas to use Shapely instead of PyGEOS
+# In a future release, GeoPandas will switch to using Shapely by default.
+import os
+os.environ['USE_PYGEOS'] = '0'
+
 import requests
 import numpy as np
 import xarray as xr
@@ -301,7 +307,7 @@ def tidal_stats(
         + ((ds_tides.time.dt.dayofyear - 1) / 365)
         + ((ds_tides.time.dt.hour - 1) / 24)
     )
-    obs_y = ds_tides.tide_height.values.astype(np.float)
+    obs_y = ds_tides.tide_height.values.astype(float)
 
     # Compute linear regression
     obs_linreg = stats.linregress(x=obs_x, y=obs_y)
